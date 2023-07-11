@@ -1,72 +1,27 @@
 package io.github.felipesilva15.domain.repository;
 
-import ch.qos.logback.core.net.server.Client;
 import io.github.felipesilva15.domain.entity.Cliente;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-@Repository
-public class Clientes {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+public interface Clientes extends JpaRepository<Cliente, Integer> {
+    List<Cliente> findByNomeLike (String nome);
 
-    @Autowired
-    private EntityManager entityManager;
+    @Query(value = "SELECT c FROM Cliente c WHERE nome LIKE :nome")
+    List<Cliente> findByNomeLikeCustom (@Param("nome") String nome);
 
-    private static String INSERT = "INSERT INTO cliente (nome) VALUES (?)";
-    private static String UPDATE = "UPDATE cliente SET nome = ? WHERE id = ?";
-    private static String SELECT_ALL = "SELECT * FROM cliente";
-    private static String DELETE = "DELETE FROM cliente WHERE id = ?";
-    private static String SELECT_BY_NAME = SELECT_ALL.concat(" WHERE nome LIKE ?");
+    List<Cliente> findByNomeLikeOrIdOrderByNome (String nome, Integer id);
 
-    @Transactional
-    public Cliente save(Cliente cliente){
-        entityManager.persist(cliente);
+    Cliente findOneByNome (String nome);
 
-        return cliente;
-    }
+    @Query(value = "DELETE FROM Cliente c WHERE c.nome = :nome")
+    @Modifying
+    void deleteByNome (String nome);
 
-    @Transactional
-    public Cliente update(Cliente cliente){
-        entityManager.merge(cliente);
-
-        return cliente;
-    }
-
-    @Transactional
-    public List<Cliente> getAll() {
-        return entityManager.createQuery("FROM Cliente", Cliente.class).getResultList();
-    }
-
-    @Transactional
-    public List<Cliente> getByName(String nome) {
-        String jpql = "SELECT c FROM Cliente c WHERE c.nome LIKE :nome";
-        TypedQuery<Cliente> query =  entityManager.createQuery(jpql, Cliente.class);
-        query.setParameter("nome", "%" + nome + "%");
-
-        return query.getResultList();
-    }
-
-    @Transactional
-    public void delete(Integer id){
-        delete(entityManager.find(Cliente.class, id));
-    }
-
-    @Transactional
-    public void delete(Cliente cliente ){
-        if (!entityManager.contains(cliente)) {
-            cliente = entityManager.merge(cliente);
-        }
-
-        entityManager.remove(cliente);
-    }
+    boolean existsByNome (String nome);
 }

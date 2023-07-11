@@ -21,28 +21,32 @@ public class VendasApplication {
             clientes.save(new Cliente("Felipe Silva"));
             clientes.save(new Cliente("Roberto de Almeida"));
 
-            List<Cliente> listaCliente = clientes.getAll();
+            List<Cliente> listaCliente = clientes.findAll();
             listaCliente.forEach(System.out::println);
 
             System.out.printf("\n*** Atualizando clientes ***\n");
             listaCliente.forEach(cliente -> {
                 cliente.setNome(cliente.getNome() + " atualizado!");
-                clientes.update(cliente);
+                clientes.save(cliente);
             });
 
-            listaCliente = clientes.getAll();
+            listaCliente = clientes.findAll();
             listaCliente.forEach(System.out::println);
 
             System.out.printf("\n*** Buscando clientes por nome ***\n");
-            clientes.getByName("Fel").forEach(System.out::println);
+            clientes.findByNomeLike("Fel").forEach(System.out::println);
 
             System.out.printf("\n*** Deletando clientes ***\n");
-            clientes.getAll().forEach(cliente -> {
+            clientes.findAll().forEach(cliente -> {
                 clientes.delete(cliente);
             });
 
-            listaCliente = clientes.getAll();
+            listaCliente = clientes.findAll();
             listaCliente.forEach(System.out::println);
+
+            System.out.printf("\n*** Teste do Exists ***\n");
+            boolean existe = clientes.existsByNome("Felipe Silva");
+            System.out.println("Existe um cliente com o nome Felipe Silva? " + existe);
         };
     }
 
