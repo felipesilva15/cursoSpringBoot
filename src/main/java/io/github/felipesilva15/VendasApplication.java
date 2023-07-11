@@ -17,7 +17,7 @@ public class VendasApplication {
     @Bean
     public CommandLineRunner executar (@Autowired Clientes clientes) {
         return args -> {
-            System.out.printf("*** Salvando clientes ***");
+            System.out.printf("*** Salvando clientes ***\n");
             clientes.save(new Cliente("Felipe Silva"));
             clientes.save(new Cliente("Roberto de Almeida"));
 
@@ -36,13 +36,13 @@ public class VendasApplication {
             System.out.printf("\n*** Buscando clientes por nome ***\n");
             clientes.getByName("Fel").forEach(System.out::println);
 
-//            System.out.printf("\n*** Deletando clientes ***\n");
-//            clientes.getAll().forEach(cliente -> {
-//                clientes.delete(cliente);
-//            });
-//
-//            listaCliente = clientes.getAll();
-//            listaCliente.forEach(System.out::println);
+            System.out.printf("\n*** Deletando clientes ***\n");
+            clientes.getAll().forEach(cliente -> {
+                clientes.delete(cliente);
+            });
+
+            listaCliente = clientes.getAll();
+            listaCliente.forEach(System.out::println);
         };
     }
 
