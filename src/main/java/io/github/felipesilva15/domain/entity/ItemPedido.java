@@ -22,7 +22,7 @@ public class ItemPedido {
     @Column(name = "quantidade")
     private Integer quantidade;
 
-    @Column(name = "quantidade", length = 20, precision = 2)
+    @Column(name = "preuni", precision = 20, scale = 2)
     private BigDecimal preco;
 
     public Integer getId() {
