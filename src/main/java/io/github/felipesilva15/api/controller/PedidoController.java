@@ -1,13 +1,22 @@
 package io.github.felipesilva15.api.controller;
 
 import io.github.felipesilva15.Service.PedidoService;
+import io.github.felipesilva15.api.dto.InfoItemPedidoDTO;
+import io.github.felipesilva15.api.dto.InfoPedidoDTO;
 import io.github.felipesilva15.api.dto.PedidoDTO;
+import io.github.felipesilva15.domain.entity.ItemPedido;
 import io.github.felipesilva15.domain.entity.Pedido;
 import io.github.felipesilva15.domain.repository.Pedidos;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -21,9 +30,10 @@ public class PedidoController {
     private PedidoService service;
 
     @GetMapping("/{id}")
-    public Pedido getById (@PathVariable Integer id) {
-        return repository
-                .findById(id)
+    public InfoPedidoDTO getById (@PathVariable Integer id) {
+        return service
+                .obterPedidoCompleto(id)
+                .map( pedido -> convertPedido(pedido) )
                 .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Pedido não encontrado!") );
     }
 
@@ -35,30 +45,32 @@ public class PedidoController {
         return pedido.getId();
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(NO_CONTENT)
-    public void delete (@PathVariable Integer id) {
-        repository
-                .findById(id)
-                .map( pedido -> {
-                    repository.delete(pedido);
-
-                    return null;
-                })
-                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Pedido não encontrado!") );
+    private InfoPedidoDTO convertPedido (Pedido pedido){
+        return InfoPedidoDTO
+                .builder()
+                .id(pedido.getId())
+                .dataPedido(pedido.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .cpf(pedido.getCliente().getCpf())
+                .nomeCliente(pedido.getCliente().getNome())
+                .total(pedido.getTotal())
+                .items(convertItemPedido(pedido.getItens()))
+                .build();
     }
 
-    public void update (@PathVariable Integer id, @RequestBody Pedido pedido) {
-        repository
-                .findById(id)
-                .map( pedidoExistente -> {
-                    pedido.setId(pedidoExistente.getId());
-                    repository.save(pedido);
+    private List<InfoItemPedidoDTO> convertItemPedido(List<ItemPedido> items) {
+        if (CollectionUtils.isEmpty(items)) {
+            return Collections.emptyList();
+        }
 
-                    return null;
-                })
-                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Pedido não encontrado!") );
+        return items
+                .stream()
+                .map( item -> InfoItemPedidoDTO
+                        .builder()
+                        .descricao(item.getProduto().getDescricao())
+                        .quantidade(item.getQuantidade())
+                        .precoUnitario(item.getPreco())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
-
-
 }
