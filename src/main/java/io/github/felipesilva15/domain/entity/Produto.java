@@ -3,6 +3,8 @@ package io.github.felipesilva15.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -17,8 +19,10 @@ public class Produto {
     private Integer id;
 
     @Column(name = "descricao", length = 80)
+    @NotEmpty(message = "{campo.descricao.obrigatorio}")
     private String descricao;
 
     @Column(name = "preuni", precision = 20, scale = 2)
+    @NotNull(message = "{campo.preco.obrigatorio}")
     private BigDecimal preco;
 }
