@@ -1,7 +1,7 @@
 package io.github.felipesilva15.api.controller;
 
-import io.github.felipesilva15.domain.entity.Cliente;
-import io.github.felipesilva15.domain.repository.Clientes;
+import io.github.felipesilva15.domain.entity.Produto;
+import io.github.felipesilva15.domain.repository.Produtos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -13,53 +13,53 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/clientes")
-public class ClienteController {
+@RequestMapping("/api/produtos")
+public class ProdutoController {
     @Autowired
-    private Clientes repository;
+    private Produtos repository;
 
     @GetMapping("/{id}")
-    public Cliente getById (@PathVariable Integer id) {
+    public Produto getById (@PathVariable Integer id) {
         return repository
                 .findById(id)
-                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado!") );
+                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Produto não encontrado!") );
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Cliente save ( @RequestBody Cliente cliente ) {
-        return repository.save(cliente);
+    public Produto save (@RequestBody Produto produto) {
+        return repository.save(produto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void delete ( @PathVariable Integer id) {
+    public void delete (@PathVariable Integer id) {
         repository
                 .findById(id)
-                .map( cliente -> {
-                    repository.delete(cliente);
+                .map(produto -> {
+                    repository.delete(produto);
 
                     return null;
                 })
-                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado!") );
+                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Produto não encontrado!") );
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void update ( @PathVariable Integer id, @RequestBody Cliente cliente ) {
+    public void update (@PathVariable Integer id, @RequestBody Produto produto) {
         repository
                 .findById(id)
-                .map( clienteExistente -> {
-                    cliente.setId(clienteExistente.getId());
-                    repository.save(cliente);
+                .map( produtoExistente -> {
+                    produto.setId(produtoExistente.getId());
+                    repository.save(produto);
 
                     return null;
                 })
-                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado!") );
+                .orElseThrow( () -> new ResponseStatusException(NOT_FOUND, "Produto não encontrado!") );
     }
 
     @GetMapping
-    public List<Cliente> find( Cliente filtro ) {
+    public List<Produto> find (Produto filtro) {
         ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         Example example = Example.of(filtro, matcher);
 
