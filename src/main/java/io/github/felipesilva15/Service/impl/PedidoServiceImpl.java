@@ -7,14 +7,18 @@ import io.github.felipesilva15.domain.entity.Cliente;
 import io.github.felipesilva15.domain.entity.ItemPedido;
 import io.github.felipesilva15.domain.entity.Pedido;
 import io.github.felipesilva15.domain.entity.Produto;
+import io.github.felipesilva15.domain.enums.StatusPedido;
 import io.github.felipesilva15.domain.repository.Clientes;
 import io.github.felipesilva15.domain.repository.ItemsPedido;
 import io.github.felipesilva15.domain.repository.Pedidos;
 import io.github.felipesilva15.domain.repository.Produtos;
+import io.github.felipesilva15.exception.PedidoNaoEncontradoExpection;
 import io.github.felipesilva15.exception.RegraNegocioException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -48,6 +52,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setData(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
 
         List<ItemPedido> itemsPedido = convertItems(pedido, dto.getItems());
 
@@ -62,6 +67,18 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido status) {
+        repository
+                .findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(status);
+                    return repository.save(pedido);
+                })
+                .orElseThrow( () -> new PedidoNaoEncontradoExpection() );
     }
 
     private List<ItemPedido> convertItems (Pedido pedido, List<ItemPedidoDTO> items) {

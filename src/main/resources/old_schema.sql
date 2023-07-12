@@ -1,7 +1,8 @@
 CREATE TABLE cliente
 (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(80)
+    nome VARCHAR(80),
+    cpf VARCHAR(11)
 );
 
 CREATE TABLE produto
@@ -16,7 +17,8 @@ CREATE TABLE PEDIDO
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     cliente_id INT REFERENCES cliente(id),
     data_pedido TIMESTAMP,
-    total NUMERIC(20,2)
+    total NUMERIC(20,2),
+    status VARCHAR(20)
 );
 
 CREATE TABLE ITEM_PEDIDO
