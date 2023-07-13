@@ -16,9 +16,7 @@ import io.github.felipesilva15.exception.PedidoNaoEncontradoExpection;
 import io.github.felipesilva15.exception.RegraNegocioException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
