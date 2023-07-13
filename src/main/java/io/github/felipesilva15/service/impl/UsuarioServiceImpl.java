@@ -1,7 +1,8 @@
-package io.github.felipesilva15.Service.impl;
+package io.github.felipesilva15.service.impl;
 
 import io.github.felipesilva15.domain.entity.Usuario;
 import io.github.felipesilva15.domain.repository.Usuarios;
+import io.github.felipesilva15.exception.SenhaInvalidaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,4 +41,15 @@ public class UsuarioServiceImpl implements UserDetailsService {
     public Usuario save(Usuario user) {
         return repository.save(user);
     }
+
+    public UserDetails auth(Usuario usuario) {
+        UserDetails user = loadUserByUsername(usuario.getLogin());
+
+        if (!encoder.matches(usuario.getSenha(), user.getPassword())){
+            throw new SenhaInvalidaException();
+        }
+
+        return user;
+    }
+
 }

@@ -1,6 +1,6 @@
-package io.github.felipesilva15.Service.impl;
+package io.github.felipesilva15.service.impl;
 
-import io.github.felipesilva15.Service.PedidoService;
+import io.github.felipesilva15.service.PedidoService;
 import io.github.felipesilva15.api.dto.ItemPedidoDTO;
 import io.github.felipesilva15.api.dto.PedidoDTO;
 import io.github.felipesilva15.domain.entity.Cliente;

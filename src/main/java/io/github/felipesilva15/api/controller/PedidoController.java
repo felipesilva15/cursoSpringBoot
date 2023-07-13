@@ -1,6 +1,6 @@
 package io.github.felipesilva15.api.controller;
 
-import io.github.felipesilva15.Service.PedidoService;
+import io.github.felipesilva15.service.PedidoService;
 import io.github.felipesilva15.api.dto.AtualizacaoStatusPedidoDTO;
 import io.github.felipesilva15.api.dto.InfoItemPedidoDTO;
 import io.github.felipesilva15.api.dto.InfoPedidoDTO;
