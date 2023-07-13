@@ -9,6 +9,7 @@ import io.github.felipesilva15.domain.entity.ItemPedido;
 import io.github.felipesilva15.domain.entity.Pedido;
 import io.github.felipesilva15.domain.enums.StatusPedido;
 import io.github.felipesilva15.domain.repository.Pedidos;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.util.CollectionUtils;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/pedidos")
+@SecurityRequirement(name = "vendas")
 public class PedidoController {
     @Autowired
     private Pedidos repository;

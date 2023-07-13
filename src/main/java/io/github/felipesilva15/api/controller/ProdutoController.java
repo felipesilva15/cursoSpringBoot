@@ -2,6 +2,7 @@ package io.github.felipesilva15.api.controller;
 
 import io.github.felipesilva15.domain.entity.Produto;
 import io.github.felipesilva15.domain.repository.Produtos;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -15,6 +16,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/produtos")
+@SecurityRequirement(name = "vendas")
 public class ProdutoController {
     @Autowired
     private Produtos repository;
