@@ -1,0 +1,5 @@
+-- Realiza o build da aplicação e gera o JAR
+mvn clean package
+
+-- roda o jar (Arquivo compilado)
+java -jar .\target\vendas-1.0-SNAPSHOT.jar
